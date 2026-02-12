@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模型
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  avatar    String?
+  rating    Float    @default(5.0)
+  eventCount Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 关系
+  initiatedActivities Activity[] @relation("Initiator")
+  participatedActivities ActivityParticipant[]
+  messages ChatMessage[]
+  arrivedAt DateTime?
+
+  @@map("users")
+}
+
+// 活动模型
+model Activity {
+  id        String   @id @default(cuid())
+  title     String
+  description String?
+  category  String   // 'card' | 'sports' | 'meal' | 'hangout'
+  location  String
+  distance  String
+  startTime DateTime
+  maxParticipants Int @default(4)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 关系
+  initiatorId String
+  initiator User @relation("Initiator", fields: [initiatorId], references: [id], onDelete: Cascade)
+  participants ActivityParticipant[]
+  chatRoom ChatRoom?
+
+  @@index([initiatorId])
+  @@index([startTime])
+  @@map("activities")
+}
+
+// 活动参与者关联表
+model ActivityParticipant {
+  id        String   @id @default(cuid())
+  activityId String
+  userId    String
+  joinedAt  DateTime @default(now())
+  arrivedAt DateTime?
+
+  // 关系
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([activityId, userId])
+  @@index([activityId])
+  @@index([userId])
+  @@map("activity_participants")
+}
+
+// 聊天室（与活动关联）
+model ChatRoom {
+  id        String   @id @default(cuid())
+  activityId String   @unique
+  status    String   @default("active") // 'active' | 'completed' | 'cancelled'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 关系
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+
+  @@index([activityId])
+  @@map("chat_rooms")
+}
+
+// 聊天消息
+model ChatMessage {
+  id        String   @id @default(cuid())
+  roomId    String
+  senderId  String
+  content   String
+  isSystem  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // 关系
+  room ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([roomId])
+  @@index([senderId])
+  @@map("chat_messages")
+}
