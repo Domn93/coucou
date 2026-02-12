@@ -20,6 +20,9 @@
   ],
   "author": "Domn",
   "license": "MIT",
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^7.4.0",
     "@supabase/supabase-js": "^2.95.3",
@@ -37,6 +40,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.24",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.1.18",
+    "tsx": "^4.21.0"
   }
 }
