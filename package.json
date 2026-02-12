@@ -12,12 +12,18 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio"
   },
-  "keywords": ["ai", "social", "activity", "p2p"],
+  "keywords": [
+    "ai",
+    "social",
+    "activity",
+    "p2p"
+  ],
   "author": "Domn",
   "license": "MIT",
   "dependencies": {
     "@prisma/client": "^7.4.0",
     "@supabase/supabase-js": "^2.95.3",
+    "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "25.2.3",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
