@@ -4,9 +4,10 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/chat/[roomId] - 获取聊天消息
 export async function GET(
   request: NextRequest,
-  { params }: { params: { roomId: string } }
+  { params }: { params: Promise<{ roomId: string }> }
 ) {
   try {
+    const { roomId } = await params
     // TODO: 从数据库获取聊天消息
     return NextResponse.json({
       messages: [],
@@ -20,9 +21,10 @@ export async function GET(
 // POST /api/chat/[roomId] - 发送聊天消息
 export async function POST(
   request: NextRequest,
-  { params }: { params: { roomId: string } }
+  { params }: { params: Promise<{ roomId: string }> }
 ) {
   try {
+    const { roomId } = await params
     const body = await request.json()
     // TODO: 验证输入、保存消息、发送 Realtime 事件
     return NextResponse.json({ id: 'new-message-id' }, { status: 201 })
