@@ -42,3 +42,19 @@ Thumbs.db
 
 # Prisma
 prisma/migrations
+
+# 测试截图（本地自测用）
+.test-screenshots/
+
+# Playwright MCP 日志
+.playwright-mcp/
+
+# Claude Code 本地配置
+.claude/
+.joycode/
+
+# TypeScript 构建缓存
+tsconfig.tsbuildinfo
+
+# 临时文件
+css-at-rules-demo.html

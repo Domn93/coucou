@@ -1,6 +1,11 @@
-import Link from 'next/link'
+'use client'
 
-// Lucide icons as inline SVGs
+// 作者: Maqingze
+// 屏幕 2 — 实时广场（含空态/骨架屏条件渲染）
+
+import Link from 'next/link'
+import { useState } from 'react'
+
 const MapPin = ({ size = 16, color = '#8B5CF6' }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
@@ -48,7 +53,6 @@ const User = ({ size = 22, color = '#D1D5DB' }) => (
   </svg>
 )
 
-// 活动卡片数据
 const cards = [
   {
     avatar: '#8B5CF6', name: '小明同学', tag: '🃏 打牌', tagColor: '#8B5CF6', tagBg: '#8B5CF620',
@@ -70,93 +74,180 @@ const cards = [
   },
 ]
 
-export default function PlazaPage() {
+// 骨架屏卡片占位
+function SkeletonCard() {
   return (
-    <div style={{ width: 375, height: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
-      {/* statusBar */}
+    <div style={{ borderRadius: 20, backgroundColor: '#F4F4F5', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: '#E5E7EB' }} />
+          <div style={{ width: 80, height: 13, borderRadius: 6, backgroundColor: '#E5E7EB' }} />
+        </div>
+        <div style={{ width: 56, height: 22, borderRadius: 12, backgroundColor: '#E5E7EB' }} />
+      </div>
+      <div style={{ width: '80%', height: 16, borderRadius: 6, backgroundColor: '#E5E7EB' }} />
+      <div style={{ display: 'flex', gap: 12 }}>
+        <div style={{ width: 80, height: 12, borderRadius: 6, backgroundColor: '#E5E7EB' }} />
+        <div style={{ width: 60, height: 12, borderRadius: 6, backgroundColor: '#E5E7EB' }} />
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ width: 90, height: 13, borderRadius: 6, backgroundColor: '#E5E7EB' }} />
+        <div style={{ width: 72, height: 32, borderRadius: 100, backgroundColor: '#E5E7EB' }} />
+      </div>
+    </div>
+  )
+}
+
+// 顶部导航和搜索栏（三态共用）
+function TopBar({ onSearchClick }: { onSearchClick: () => void }) {
+  return (
+    <>
       <div style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <MapPin size={16} color="#8B5CF6" />
           <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>朝阳区·望京</span>
         </div>
-        <div style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Link href="/notifications" style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
           <Bell size={18} color="#1A1A1A" />
-        </div>
+        </Link>
       </div>
-
-      {/* searchBar */}
-      <div style={{ height: 48, borderRadius: 24, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px', margin: '0 16px', flexShrink: 0 }}>
+      <div
+        onClick={onSearchClick}
+        style={{ height: 48, borderRadius: 24, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px', margin: '0 16px', flexShrink: 0, cursor: 'pointer' }}
+      >
         <Search size={18} color="#9CA3AF" />
         <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>附近有什么好玩的...</span>
       </div>
+    </>
+  )
+}
 
-      {/* content - 活动卡片流 */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 16px 0 16px', overflowY: 'auto' }}>
-        {cards.map((card, i) => (
-          <Link href="/activity" key={i} style={{ textDecoration: 'none' }}>
-            <div style={{ borderRadius: 20, backgroundColor: '#F4F4F5', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {/* top */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: card.avatar }} />
-                  <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600 }}>{card.name}</span>
-                </div>
-                <div style={{ borderRadius: 12, backgroundColor: card.tagBg, padding: '4px 10px' }}>
-                  <span style={{ color: card.tagColor, fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600 }}>{card.tag}</span>
-                </div>
-              </div>
-              {/* title */}
-              <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 16, fontWeight: 700 }}>{card.title}</span>
-              {/* info */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%' }}>
-                {card.useEmoji ? (
-                  <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.dist}</span>
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <Footprints size={14} color="#9CA3AF" />
-                    <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.dist}</span>
-                  </div>
-                )}
-                {card.useEmoji ? (
-                  <span style={{ color: '#F472B6', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.time}</span>
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <Clock size={14} color="#9CA3AF" />
-                    <span style={{ color: '#F472B6', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.time}</span>
-                  </div>
-                )}
-              </div>
-              {/* bottom */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500 }}>{card.people}</span>
-                <div style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '8px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700 }}>凑一个</span>
-                </div>
-              </div>
-            </div>
-          </Link>
+// 底部导航栏
+function TabBar() {
+  return (
+    <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px 28px 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+      <Link href="/plaza" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+        <LayoutGrid size={22} color="#8B5CF6" />
+        <span style={{ color: '#8B5CF6', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600 }}>广场</span>
+      </Link>
+      <Link href="/ai" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+        <MessageCircle size={22} color="#D1D5DB" />
+        <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>AI助手</span>
+      </Link>
+      <Link href="/chat" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+        <Mail size={22} color="#D1D5DB" />
+        <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>消息</span>
+      </Link>
+      <Link href="/profile" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+        <User size={22} color="#D1D5DB" />
+        <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>我的</span>
+      </Link>
+    </div>
+  )
+}
+
+// 视图状态类型：normal | empty | loading
+type ViewState = 'normal' | 'empty' | 'loading'
+
+export default function PlazaPage() {
+  const [viewState, setViewState] = useState<ViewState>('normal')
+
+  const handleSearchClick = () => {
+    window.location.href = '/search'
+  }
+
+  return (
+    <div style={{ width: 375, height: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+      <TopBar onSearchClick={handleSearchClick} />
+
+      {/* 演示切换按钮（开发用） */}
+      <div style={{ display: 'flex', gap: 6, padding: '8px 16px 0 16px', flexShrink: 0 }}>
+        {(['normal', 'empty', 'loading'] as ViewState[]).map(s => (
+          <div key={s} onClick={() => setViewState(s)} style={{ padding: '4px 10px', borderRadius: 100, backgroundColor: viewState === s ? '#8B5CF6' : '#F4F4F5', cursor: 'pointer' }}>
+            <span style={{ color: viewState === s ? '#FFFFFF' : '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 11 }}>
+              {s === 'normal' ? '正常' : s === 'empty' ? '空态' : '加载中'}
+            </span>
+          </div>
         ))}
       </div>
 
-      {/* tabBar */}
-      <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px 28px 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
-        <Link href="/plaza" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
-          <LayoutGrid size={22} color="#8B5CF6" />
-          <span style={{ color: '#8B5CF6', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600 }}>广场</span>
-        </Link>
-        <Link href="/ai" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
-          <MessageCircle size={22} color="#D1D5DB" />
-          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>AI助手</span>
-        </Link>
-        <Link href="/chat" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
-          <Mail size={22} color="#D1D5DB" />
-          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>消息</span>
-        </Link>
-        <Link href="#" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
-          <User size={22} color="#D1D5DB" />
-          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>我的</span>
-        </Link>
-      </div>
+      {/* 骨架屏 */}
+      {viewState === 'loading' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 16px 0 16px', overflowY: 'auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0' }}>
+            <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>加载中...</span>
+          </div>
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      )}
+
+      {/* 空态 */}
+      {viewState === 'empty' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 32px', gap: 16 }}>
+          <div style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 52 }}>🏙</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+            <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 20, fontWeight: 700 }}>附近暂无活动</span>
+            <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, textAlign: 'center' }}>成为第一个发起活动的人，让有趣的事情发生！</span>
+          </div>
+          <Link href="/create" style={{ textDecoration: 'none', width: '100%' }}>
+            <div style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '16px 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700 }}>✦ 发起第一个活动</span>
+            </div>
+          </Link>
+        </div>
+      )}
+
+      {/* 正常态：活动卡片列表 */}
+      {viewState === 'normal' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 16px 0 16px', overflowY: 'auto' }}>
+          {cards.map((card, i) => (
+            <Link href="/activity" key={i} style={{ textDecoration: 'none' }}>
+              <div style={{ borderRadius: 20, backgroundColor: '#F4F4F5', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: card.avatar }} />
+                    <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600 }}>{card.name}</span>
+                  </div>
+                  <div style={{ borderRadius: 12, backgroundColor: card.tagBg, padding: '4px 10px' }}>
+                    <span style={{ color: card.tagColor, fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600 }}>{card.tag}</span>
+                  </div>
+                </div>
+                <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 16, fontWeight: 700 }}>{card.title}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%' }}>
+                  {card.useEmoji ? (
+                    <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.dist}</span>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <Footprints size={14} color="#9CA3AF" />
+                      <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.dist}</span>
+                    </div>
+                  )}
+                  {card.useEmoji ? (
+                    <span style={{ color: '#F472B6', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.time}</span>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <Clock size={14} color="#9CA3AF" />
+                      <span style={{ color: '#F472B6', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.time}</span>
+                    </div>
+                  )}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                  <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500 }}>{card.people}</span>
+                  <div style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '8px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700 }}>凑一个</span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      <TabBar />
     </div>
   )
 }
