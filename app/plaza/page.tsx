@@ -1,10 +1,11 @@
 'use client'
 
 // 作者: Maqingze
-// 屏幕 2 — 实时广场（含空态/骨架屏条件渲染）
+// 屏幕 2 — 实时广场（含空态/骨架屏，接入真实 API 数据）
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { Activity } from '@/lib/types'
 
 const MapPin = ({ size = 16, color = '#8B5CF6' }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -47,32 +48,21 @@ const Mail = ({ size = 22, color = '#D1D5DB' }) => (
     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
   </svg>
 )
-const User = ({ size = 22, color = '#D1D5DB' }) => (
+const UserIcon = ({ size = 22, color = '#D1D5DB' }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
   </svg>
 )
 
-const cards = [
-  {
-    avatar: '#8B5CF6', name: '小明同学', tag: '🃏 打牌', tagColor: '#8B5CF6', tagBg: '#8B5CF620',
-    title: '三缺一！望京 SOHO 德州扑克',
-    dist: '步行5分钟', time: '30分钟后开始', timeColor: '#F472B6',
-    people: '3/4 人已加入',
-  },
-  {
-    avatar: '#14B8A6', name: '运动达人Lisa', tag: '🏃 运动', tagColor: '#14B8A6', tagBg: '#14B8A620',
-    title: '傍晚奥森公园跑步约伴',
-    dist: '🚶 步行12分钟', time: '⏰ 1小时后', timeColor: '#F472B6',
-    people: '2/6 人已加入', useEmoji: true,
-  },
-  {
-    avatar: '#F472B6', name: '吃货小王', tag: '🍜 饭局', tagColor: '#F472B6', tagBg: '#F472B620',
-    title: '新开的川菜馆谁来尝尝',
-    dist: '🚶 步行8分钟', time: '⏰ 今晚7点', timeColor: '#F472B6',
-    people: '1/4 人已加入', useEmoji: true,
-  },
-]
+// 类别颜色映射
+const categoryColors: Record<string, { color: string; bg: string }> = {
+  card: { color: '#8B5CF6', bg: '#8B5CF620' },
+  sports: { color: '#14B8A6', bg: '#14B8A620' },
+  meal: { color: '#F472B6', bg: '#F472B620' },
+  hangout: { color: '#F59E0B', bg: '#F59E0B20' },
+  exhibition: { color: '#3B82F6', bg: '#3B82F620' },
+  music: { color: '#EC4899', bg: '#EC489920' },
+}
 
 // 骨架屏卡片占位
 function SkeletonCard() {
@@ -98,7 +88,7 @@ function SkeletonCard() {
   )
 }
 
-// 顶部导航和搜索栏（三态共用）
+// 顶部导航和搜索栏
 function TopBar({ onSearchClick }: { onSearchClick: () => void }) {
   return (
     <>
@@ -139,52 +129,126 @@ function TabBar() {
         <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>消息</span>
       </Link>
       <Link href="/profile" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
-        <User size={22} color="#D1D5DB" />
+        <UserIcon size={22} color="#D1D5DB" />
         <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>我的</span>
       </Link>
     </div>
   )
 }
 
-// 视图状态类型：normal | empty | loading
-type ViewState = 'normal' | 'empty' | 'loading'
+// 单张活动卡片
+function ActivityCard({ activity }: { activity: Activity }) {
+  const catColor = categoryColors[activity.category] || { color: '#8B5CF6', bg: '#8B5CF620' }
+  const avatarColors = ['#8B5CF6', '#14B8A6', '#F472B6', '#F59E0B', '#3B82F6']
+  const avatarColor = avatarColors[activity.initiator.name.charCodeAt(0) % avatarColors.length]
+
+  return (
+    <Link href={`/activity?id=${activity.id}`} style={{ textDecoration: 'none' }}>
+      <div style={{ borderRadius: 20, backgroundColor: '#F4F4F5', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {/* 头像 + 昵称 + 类别标签 */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {activity.initiator.avatar ? (
+              <img src={activity.initiator.avatar} alt={activity.initiator.name} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }} />
+            ) : (
+              <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: avatarColor, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700 }}>
+                  {activity.initiator.name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+            <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600 }}>{activity.initiator.name}</span>
+          </div>
+          <div style={{ borderRadius: 12, backgroundColor: catColor.bg, padding: '4px 10px' }}>
+            <span style={{ color: catColor.color, fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600 }}>
+              {activity.categoryEmoji} {activity.categoryLabel}
+            </span>
+          </div>
+        </div>
+
+        {/* 活动标题 */}
+        <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 16, fontWeight: 700 }}>{activity.title}</span>
+
+        {/* 距离 + 时间 */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Footprints size={14} color="#9CA3AF" />
+            <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{activity.distance}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Clock size={14} color="#9CA3AF" />
+            <span style={{ color: '#F472B6', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{activity.timeDisplay}</span>
+          </div>
+        </div>
+
+        {/* 人数 + 加入按钮 */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500 }}>
+            {activity.currentParticipants}/{activity.maxParticipants} 人已加入
+            {activity.urgency && <span style={{ color: '#F472B6', marginLeft: 6 }}>· {activity.urgency}</span>}
+          </span>
+          <div style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '8px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700 }}>凑一个</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
 
 export default function PlazaPage() {
-  const [viewState, setViewState] = useState<ViewState>('normal')
+  const [activities, setActivities] = useState<Activity[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const fetchActivities = useCallback(async () => {
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/activities')
+      const data = await res.json()
+      setActivities(data.activities || [])
+    } catch {
+      setError('加载失败，请下拉刷新重试')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchActivities()
+  }, [fetchActivities])
 
   const handleSearchClick = () => {
     window.location.href = '/search'
   }
 
   return (
-    <div style={{ width: 375, height: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       <TopBar onSearchClick={handleSearchClick} />
 
-      {/* 演示切换按钮（开发用） */}
-      <div style={{ display: 'flex', gap: 6, padding: '8px 16px 0 16px', flexShrink: 0 }}>
-        {(['normal', 'empty', 'loading'] as ViewState[]).map(s => (
-          <div key={s} onClick={() => setViewState(s)} style={{ padding: '4px 10px', borderRadius: 100, backgroundColor: viewState === s ? '#8B5CF6' : '#F4F4F5', cursor: 'pointer' }}>
-            <span style={{ color: viewState === s ? '#FFFFFF' : '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 11 }}>
-              {s === 'normal' ? '正常' : s === 'empty' ? '空态' : '加载中'}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* 骨架屏 */}
-      {viewState === 'loading' && (
+      {/* 加载骨架屏 */}
+      {loading && (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 16px 0 16px', overflowY: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0' }}>
-            <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>加载中...</span>
-          </div>
           <SkeletonCard />
           <SkeletonCard />
           <SkeletonCard />
         </div>
       )}
 
+      {/* 错误提示 */}
+      {!loading && error && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '0 32px' }}>
+          <span style={{ fontSize: 40 }}>😵</span>
+          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, textAlign: 'center' }}>{error}</span>
+          <div onClick={fetchActivities} style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '12px 24px', cursor: 'pointer' }}>
+            <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700 }}>重新加载</span>
+          </div>
+        </div>
+      )}
+
       {/* 空态 */}
-      {viewState === 'empty' && (
+      {!loading && !error && activities.length === 0 && (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 32px', gap: 16 }}>
           <div style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontSize: 52 }}>🏙</span>
@@ -201,49 +265,19 @@ export default function PlazaPage() {
         </div>
       )}
 
-      {/* 正常态：活动卡片列表 */}
-      {viewState === 'normal' && (
+      {/* 活动卡片列表 */}
+      {!loading && !error && activities.length > 0 && (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 16px 0 16px', overflowY: 'auto' }}>
-          {cards.map((card, i) => (
-            <Link href="/activity" key={i} style={{ textDecoration: 'none' }}>
-              <div style={{ borderRadius: 20, backgroundColor: '#F4F4F5', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: card.avatar }} />
-                    <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600 }}>{card.name}</span>
-                  </div>
-                  <div style={{ borderRadius: 12, backgroundColor: card.tagBg, padding: '4px 10px' }}>
-                    <span style={{ color: card.tagColor, fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600 }}>{card.tag}</span>
-                  </div>
-                </div>
-                <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 16, fontWeight: 700 }}>{card.title}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%' }}>
-                  {card.useEmoji ? (
-                    <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.dist}</span>
-                  ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <Footprints size={14} color="#9CA3AF" />
-                      <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.dist}</span>
-                    </div>
-                  )}
-                  {card.useEmoji ? (
-                    <span style={{ color: '#F472B6', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.time}</span>
-                  ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <Clock size={14} color="#9CA3AF" />
-                      <span style={{ color: '#F472B6', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{card.time}</span>
-                    </div>
-                  )}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                  <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500 }}>{card.people}</span>
-                  <div style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '8px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700 }}>凑一个</span>
-                  </div>
-                </div>
-              </div>
-            </Link>
+          {activities.map((activity) => (
+            <ActivityCard key={activity.id} activity={activity} />
           ))}
+          {/* 底部发起活动入口 */}
+          <Link href="/create" style={{ textDecoration: 'none', marginBottom: 16 }}>
+            <div style={{ borderRadius: 20, border: '1.5px dashed #E5E7EB', padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18 }}>✦</span>
+              <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>发起新活动</span>
+            </div>
+          </Link>
         </div>
       )}
 
