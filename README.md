@@ -145,7 +145,7 @@ npm run db:studio
 - **辅助色**: 粉色 `#F472B6`、青色 `#14B8A6`
 - **圆角**: 卡片 20px、按钮 100px（pill 形）
 - **字体**: Bricolage Grotesque（标题）、DM Sans（正文）
-- **布局**: 375x812（iPhone H5 标准）
+- **布局**: 响应式移动优先（适配 iOS/Android 主流机型，支持安全区）
 
 ## 📦 部署到 Vercel
 

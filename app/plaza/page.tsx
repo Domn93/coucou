@@ -53,6 +53,11 @@ const UserIcon = ({ size = 22, color = '#D1D5DB' }) => (
     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
   </svg>
 )
+const MapIcon = ({ size = 22, color = '#D1D5DB' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" /><line x1="9" y1="3" x2="9" y2="18" /><line x1="15" y1="6" x2="15" y2="21" />
+  </svg>
+)
 
 // 类别颜色映射
 const categoryColors: Record<string, { color: string; bg: string }> = {
@@ -89,13 +94,13 @@ function SkeletonCard() {
 }
 
 // 顶部导航和搜索栏
-function TopBar({ onSearchClick }: { onSearchClick: () => void }) {
+function TopBar({ onSearchClick, locationName }: { onSearchClick: () => void; locationName: string }) {
   return (
     <>
-      <div style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', flexShrink: 0 }}>
+      <div style={{ minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'max(12px, env(safe-area-inset-top)) 20px 12px 20px', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <MapPin size={16} color="#8B5CF6" />
-          <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>朝阳区·望京</span>
+          <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>{locationName}</span>
         </div>
         <Link href="/notifications" style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
           <Bell size={18} color="#1A1A1A" />
@@ -115,10 +120,14 @@ function TopBar({ onSearchClick }: { onSearchClick: () => void }) {
 // 底部导航栏
 function TabBar() {
   return (
-    <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px 28px 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+    <div style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
       <Link href="/plaza" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
         <LayoutGrid size={22} color="#8B5CF6" />
         <span style={{ color: '#8B5CF6', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600 }}>广场</span>
+      </Link>
+      <Link href="/map" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+        <MapIcon size={22} color="#D1D5DB" />
+        <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>地图</span>
       </Link>
       <Link href="/ai" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
         <MessageCircle size={22} color="#D1D5DB" />
@@ -200,12 +209,41 @@ export default function PlazaPage() {
   const [activities, setActivities] = useState<Activity[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  // 用户GPS位置
+  const [userLat, setUserLat] = useState<number | null>(null)
+  const [userLng, setUserLng] = useState<number | null>(null)
+  const [locationName, setLocationName] = useState('定位中...')
 
-  const fetchActivities = useCallback(async () => {
+  // 获取用户GPS位置
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setLocationName('附近')
+      return
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLat(pos.coords.latitude)
+        setUserLng(pos.coords.longitude)
+        setLocationName('当前位置')
+      },
+      () => {
+        // 用户拒绝授权或获取失败，静默降级
+        setLocationName('附近')
+      },
+      { timeout: 8000, maximumAge: 300000 }
+    )
+  }, [])
+
+  const fetchActivities = useCallback(async (lat?: number | null, lng?: number | null) => {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/activities')
+      const params = new URLSearchParams()
+      if (lat != null && lng != null) {
+        params.set('lat', String(lat))
+        params.set('lng', String(lng))
+      }
+      const res = await fetch(`/api/activities?${params}`)
       const data = await res.json()
       setActivities(data.activities || [])
     } catch {
@@ -216,20 +254,20 @@ export default function PlazaPage() {
   }, [])
 
   useEffect(() => {
-    fetchActivities()
-  }, [fetchActivities])
+    fetchActivities(userLat, userLng)
+  }, [fetchActivities, userLat, userLng])
 
   const handleSearchClick = () => {
     window.location.href = '/search'
   }
 
   return (
-    <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
-      <TopBar onSearchClick={handleSearchClick} />
+    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+      <TopBar onSearchClick={handleSearchClick} locationName={locationName} />
 
       {/* 加载骨架屏 */}
       {loading && (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 16px 0 16px', overflowY: 'auto' }}>
+        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 16px 0 16px', overflowY: 'auto' }}>
           <SkeletonCard />
           <SkeletonCard />
           <SkeletonCard />
@@ -241,7 +279,7 @@ export default function PlazaPage() {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '0 32px' }}>
           <span style={{ fontSize: 40 }}>😵</span>
           <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, textAlign: 'center' }}>{error}</span>
-          <div onClick={fetchActivities} style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '12px 24px', cursor: 'pointer' }}>
+          <div onClick={() => fetchActivities(userLat, userLng)} style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '12px 24px', cursor: 'pointer' }}>
             <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700 }}>重新加载</span>
           </div>
         </div>
@@ -267,7 +305,7 @@ export default function PlazaPage() {
 
       {/* 活动卡片列表 */}
       {!loading && !error && activities.length > 0 && (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 16px 0 16px', overflowY: 'auto' }}>
+        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 12, padding: '12px 16px 0 16px', overflowY: 'auto' }}>
           {activities.map((activity) => (
             <ActivityCard key={activity.id} activity={activity} />
           ))}

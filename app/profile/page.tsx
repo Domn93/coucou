@@ -25,6 +25,11 @@ const UserIcon = ({ size = 22, color = '#8B5CF6' }) => (
     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
   </svg>
 )
+const MapIcon = ({ size = 22, color = '#9CA3AF' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" /><line x1="9" y1="3" x2="9" y2="18" /><line x1="15" y1="6" x2="15" y2="21" />
+  </svg>
+)
 
 const menuItems = [
   { emoji: '📅', label: '我的活动', bgColor: '#8B5CF620' },
@@ -35,9 +40,9 @@ const menuItems = [
 
 export default function ProfilePage() {
   return (
-    <div style={{ width: 375, height: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* header */}
-      <div style={{ height: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 20px', flexShrink: 0 }}>
+      <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
         <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 700 }}>我的</span>
       </div>
 
@@ -65,7 +70,7 @@ export default function ProfilePage() {
       </div>
 
       {/* menuSection */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '20px 20px 0 20px' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '20px 20px 0 20px' }}>
         <div style={{ backgroundColor: '#F4F4F5', borderRadius: 20, overflow: 'hidden' }}>
           {menuItems.map((item, i) => (
             <div key={i}>
@@ -89,9 +94,10 @@ export default function ProfilePage() {
       </div>
 
       {/* tabBar */}
-      <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px 28px 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+      <div style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
         {[
           { icon: <LayoutGrid />, label: '广场', active: false, href: '/plaza' },
+          { icon: <MapIcon />, label: '地图', active: false, href: '/map' },
           { icon: <MessageCircle />, label: 'AI助手', active: false, href: '/ai' },
           { icon: <Mail />, label: '消息', active: false, href: '/chat' },
           { icon: <UserIcon />, label: '我的', active: true, href: '/profile' },

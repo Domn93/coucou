@@ -11,9 +11,9 @@ const ChevronRight = ({ size = 18, color = '#9CA3AF' }) => (
 
 export default function OnboardingSetupPage() {
   return (
-    <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
       {/* 进度条（已完成） */}
-      <div style={{ padding: '20px 20px 0 20px' }}>
+      <div style={{ padding: 'max(20px, env(safe-area-inset-top)) 20px 0 20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ flex: 1, height: 4, borderRadius: 2, backgroundColor: '#8B5CF6' }} />
           <span style={{ color: '#8B5CF6', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600 }}>2/2</span>
@@ -61,7 +61,7 @@ export default function OnboardingSetupPage() {
 
       {/* 底部按钮 */}
       <div style={{ flex: 1 }} />
-      <div style={{ padding: '24px 20px 40px 20px' }}>
+      <div style={{ padding: '24px 20px calc(24px + env(safe-area-inset-bottom)) 20px' }}>
         <Link href="/plaza" style={{ textDecoration: 'none' }}>
           <div style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '16px 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700 }}>✦ 开始探索</span>

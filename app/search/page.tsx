@@ -37,9 +37,9 @@ const results = [
 
 export default function SearchPage() {
   return (
-    <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* 顶部搜索栏 */}
-      <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+      <div style={{ padding: 'max(12px, env(safe-area-inset-top)) 16px 12px 16px', display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
         <Link href="/plaza" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 18, backgroundColor: '#F4F4F5', textDecoration: 'none', flexShrink: 0 }}>
           <ChevronLeft />
         </Link>
@@ -88,7 +88,7 @@ export default function SearchPage() {
       </div>
 
       {/* 搜索结果 */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10, padding: '0 16px 24px 16px', overflowY: 'auto' }}>
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 10, padding: '0 16px 24px 16px', overflowY: 'auto' }}>
         {results.map((card, i) => (
           <Link href="/activity" key={i} style={{ textDecoration: 'none' }}>
             <div style={{ borderRadius: 18, backgroundColor: '#F4F4F5', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>

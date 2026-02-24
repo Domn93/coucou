@@ -23,9 +23,9 @@ const activities = [
 
 export default function UserProfilePage() {
   return (
-    <div style={{ width: 375, height: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* 顶部导航 */}
-      <div style={{ height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+      <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
         <Link href="/plaza" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 18, backgroundColor: '#F4F4F5', textDecoration: 'none' }}>
           <ChevronLeft />
         </Link>
@@ -35,7 +35,7 @@ export default function UserProfilePage() {
       </div>
 
       {/* 内容区域 */}
-      <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
         {/* 用户信息 */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '16px 20px 24px 20px' }}>
           <div style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#14B8A6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -85,7 +85,7 @@ export default function UserProfilePage() {
         </div>
 
         {/* 底部按钮 */}
-        <div style={{ display: 'flex', gap: 12, padding: '20px 20px 28px 20px' }}>
+        <div style={{ display: 'flex', gap: 12, padding: '20px 20px calc(20px + env(safe-area-inset-bottom)) 20px' }}>
           <div style={{ flex: 1, borderRadius: 100, backgroundColor: '#8B5CF6', padding: '14px 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700 }}>发送消息</span>
           </div>

@@ -12,42 +12,63 @@ datasource db {
 
 // 用户模型
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  avatar    String?
-  rating    Float    @default(5.0)
-  eventCount Int     @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  phone      String?  @unique  // 手机号（主要登录方式）
+  email      String?  @unique  // 改为可选（兼容旧数据）
+  name       String
+  avatar     String?
+  rating     Float    @default(5.0)
+  eventCount Int      @default(0)
+  latitude   Float?   // 用户最后位置-纬度
+  longitude  Float?   // 用户最后位置-经度
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // 关系
-  initiatedActivities Activity[] @relation("Initiator")
+  initiatedActivities    Activity[]            @relation("Initiator")
   participatedActivities ActivityParticipant[]
-  messages ChatMessage[]
-  arrivedAt DateTime?
+  messages               ChatMessage[]
+  arrivedAt              DateTime?
+  authoredNotes          MapNote[]             @relation("AuthoredNotes")
+  mapNoteLikes           MapNoteLike[]
 
   @@map("users")
 }
 
+// 手机验证码临时存储
+model VerificationCode {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@map("verification_codes")
+}
+
 // 活动模型
 model Activity {
-  id        String   @id @default(cuid())
-  title     String
+  id          String   @id @default(cuid())
+  title       String
   description String?
-  category  String   // 'card' | 'sports' | 'meal' | 'hangout'
-  location  String
-  distance  String
-  startTime DateTime
+  category    String   // 'card' | 'sports' | 'meal' | 'hangout'
+  location    String
+  latitude    Float?   // 活动地点-纬度
+  longitude   Float?   // 活动地点-经度
+  distance    String
+  startTime   DateTime
   maxParticipants Int @default(4)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // 关系
   initiatorId String
   initiator User @relation("Initiator", fields: [initiatorId], references: [id], onDelete: Cascade)
   participants ActivityParticipant[]
   chatRoom ChatRoom?
+  mapNotes MapNote[]
 
   @@index([initiatorId])
   @@index([startTime])
@@ -104,4 +125,37 @@ model ChatMessage {
   @@index([roomId])
   @@index([senderId])
   @@map("chat_messages")
+}
+
+// 地图笔记
+model MapNote {
+  id         String   @id @default(cuid())
+  content    String
+  images     String[] @default([])
+  tags       String[] @default([])
+  latitude   Float
+  longitude  Float
+  authorId   String
+  activityId String?
+  createdAt  DateTime @default(now())
+
+  author   User      @relation("AuthoredNotes", fields: [authorId], references: [id])
+  activity Activity? @relation(fields: [activityId], references: [id])
+  likes    MapNoteLike[]
+
+  @@index([latitude, longitude])
+  @@map("map_notes")
+}
+
+// 地图笔记点赞
+model MapNoteLike {
+  id     String @id @default(cuid())
+  noteId String
+  userId String
+
+  note MapNote @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user User    @relation(fields: [userId], references: [id])
+
+  @@unique([noteId, userId])
+  @@map("map_note_likes")
 }

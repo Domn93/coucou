@@ -4,21 +4,19 @@ export default function Home() {
   return (
     <main
       style={{
-        width: 375,
-        height: 812,
+        width: '100%',
+        minHeight: '100dvh',
         background: 'linear-gradient(180deg, #7C3AED 0%, #8B5CF6 40%, #A78BFA 70%, #C4B5FD 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: 40,
-        overflow: 'hidden',
+        justifyContent: 'space-between',
+        gap: 32,
+        padding: 'max(24px, env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom))',
+        overflowY: 'auto',
         margin: '0 auto',
       }}
     >
-      {/* topSpace - 不可见占位 */}
-      <div style={{ height: 120, width: 1, opacity: 0 }} />
-
       {/* logoWrap */}
       <div
         style={{
@@ -100,12 +98,12 @@ export default function Home() {
           alignItems: 'center',
           gap: 16,
           width: '100%',
-          padding: '0 40px',
+          padding: '0 8px',
         }}
       >
         {/* btn - 主按钮 */}
         <Link
-          href="/plaza"
+          href="/login"
           style={{
             width: '100%',
             height: 56,

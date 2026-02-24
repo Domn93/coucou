@@ -1,10 +1,9 @@
 // 作者: Maqingze
-// 活动 CRUD API — 连接 Prisma + Supabase PostgreSQL
+// 活动 CRUD API — 连接 Prisma + Supabase PostgreSQL，支持距离排序
 
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
-
 
 // 活动类别标签映射
 const categoryMap: Record<string, { label: string; emoji: string }> = {
@@ -29,13 +28,37 @@ function getTimeDisplay(startTime: Date): string {
   return startTime.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' })
 }
 
-// GET /api/activities — 获取活动列表（支持搜索和分类过滤）
+// Haversine公式计算距离（米）
+function haversine(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371000
+  const rad = Math.PI / 180
+  const dLat = (lat2 - lat1) * rad
+  const dLng = (lng2 - lng1) * rad
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLng / 2) ** 2
+  return 2 * R * Math.asin(Math.sqrt(a))
+}
+
+// 距离转友好文本
+function distanceToText(meters: number): string {
+  if (meters < 100) return '就在附近'
+  if (meters < 500) return `${Math.round(meters / 10) * 10}m`
+  if (meters < 1000) return `${Math.round(meters / 50) * 50}m`
+  const km = meters / 1000
+  if (km < 3) return `${km.toFixed(1)}km`
+  const minutes = Math.round((meters / 5000) * 60)
+  if (minutes < 60) return `步行${minutes}分钟`
+  return `${km.toFixed(0)}km`
+}
+
+// GET /api/activities — 获取活动列表（支持搜索、分类过滤、距离排序）
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const q = searchParams.get('q') || ''
     const category = searchParams.get('category') || ''
     const limit = parseInt(searchParams.get('limit') || '20')
+    const userLat = searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : null
+    const userLng = searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : null
 
     const activities = await prisma.activity.findMany({
       where: {
@@ -60,9 +83,18 @@ export async function GET(request: NextRequest) {
       take: limit,
     })
 
-    // 格式化为前端所需结构
+    // 格式化为前端所需结构，附加真实距离
     const formatted = activities.map((a) => {
       const cat = categoryMap[a.category] || { label: a.category, emoji: '✦' }
+
+      // 计算距离
+      let distanceText = a.distance || '附近'
+      let distanceMeters = Infinity
+      if (userLat != null && userLng != null && a.latitude != null && a.longitude != null) {
+        distanceMeters = haversine(userLat, userLng, a.latitude, a.longitude)
+        distanceText = distanceToText(distanceMeters)
+      }
+
       return {
         id: a.id,
         title: a.title,
@@ -71,7 +103,10 @@ export async function GET(request: NextRequest) {
         categoryLabel: cat.label,
         categoryEmoji: cat.emoji,
         location: a.location,
-        distance: a.distance,
+        latitude: a.latitude,
+        longitude: a.longitude,
+        distance: distanceText,
+        distanceMeters,
         startTime: a.startTime.toISOString(),
         timeDisplay: getTimeDisplay(a.startTime),
         urgency: a.maxParticipants - a.participants.length <= 1 ? `急缺${a.maxParticipants - a.participants.length}人` : undefined,
@@ -92,6 +127,11 @@ export async function GET(request: NextRequest) {
       }
     })
 
+    // 有坐标时按距离排序，否则保持时间排序
+    if (userLat != null && userLng != null) {
+      formatted.sort((a, b) => a.distanceMeters - b.distanceMeters)
+    }
+
     return NextResponse.json({ activities: formatted })
   } catch (error) {
     console.error('GET /api/activities error:', error)
@@ -103,7 +143,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { title, description, category, location, distance, startTime, maxParticipants, initiatorId } = body
+    const { title, description, category, location, latitude, longitude, distance, startTime, maxParticipants, initiatorId } = body
 
     // 基础校验
     if (!title || !category || !location || !startTime || !initiatorId) {
@@ -116,6 +156,8 @@ export async function POST(request: NextRequest) {
         description: description || '',
         category,
         location,
+        latitude: latitude ?? null,
+        longitude: longitude ?? null,
         distance: distance || '附近',
         startTime: new Date(startTime),
         maxParticipants: maxParticipants || 4,
@@ -142,3 +184,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create activity' }, { status: 500 })
   }
 }
+

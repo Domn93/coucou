@@ -163,7 +163,7 @@ export default function ActivityPage() {
   // 加载中
   if (loading) {
     return (
-      <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+      <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
         <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>加载中...</span>
       </div>
     )
@@ -172,7 +172,7 @@ export default function ActivityPage() {
   // 无 ID 或加载失败时显示静态演示内容
   if (!activity) {
     return (
-      <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, margin: '0 auto', padding: '0 32px' }}>
+      <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, margin: '0 auto', padding: '0 32px' }}>
         <span style={{ fontSize: 40 }}>😵</span>
         <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, textAlign: 'center' }}>
           {error || '活动不存在，请从广场进入'}
@@ -192,16 +192,16 @@ export default function ActivityPage() {
   const timeStr = startDate.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 
   return (
-    <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* 顶部导航 */}
-      <div style={{ height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+      <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
         <Link href="/plaza" style={{ display: 'flex' }}><ChevronLeft /></Link>
         <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 700 }}>活动详情</span>
         <Share2 size={22} color="#1A1A1A" />
       </div>
 
       {/* 主体内容 */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 20, padding: '8px 20px 0 20px', overflowY: 'auto' }}>
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 20, padding: '8px 20px 0 20px', overflowY: 'auto' }}>
 
         {/* 标题区 */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
@@ -304,7 +304,7 @@ export default function ActivityPage() {
       </div>
 
       {/* 底部操作栏 */}
-      <div style={{ height: 100, display: 'flex', alignItems: 'center', padding: '16px 20px 34px 20px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+      <div style={{ minHeight: 100, display: 'flex', alignItems: 'center', padding: '16px 20px calc(16px + env(safe-area-inset-bottom)) 20px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
         {joined ? (
           <Link
             href={activity.chatRoomId ? `/chat?roomId=${activity.chatRoomId}` : '/chat'}

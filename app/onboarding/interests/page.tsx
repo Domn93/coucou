@@ -18,9 +18,9 @@ const interests = [
 
 export default function OnboardingInterestsPage() {
   return (
-    <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto' }}>
       {/* 进度条 + 跳过 */}
-      <div style={{ padding: '20px 20px 0 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ padding: 'max(20px, env(safe-area-inset-top)) 20px 0 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ flex: 1, height: 4, borderRadius: 2, backgroundColor: '#F4F4F5', marginRight: 8, overflow: 'hidden' }}>
             <div style={{ width: '50%', height: '100%', borderRadius: 2, backgroundColor: '#8B5CF6' }} />
@@ -57,7 +57,7 @@ export default function OnboardingInterestsPage() {
       </div>
 
       {/* 底部已选提示 + 按钮 */}
-      <div style={{ padding: '24px 20px 40px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '24px 20px calc(24px + env(safe-area-inset-bottom)) 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>已选 </span>
           <span style={{ color: '#8B5CF6', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700 }}> 4 </span>

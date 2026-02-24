@@ -116,17 +116,17 @@ export default function ChatPage() {
     }
   }
 
-  // 没有 roomId 时显示演示静态页面
+  // 没有 roomId 时显示消息落地页（含 TabBar）
   if (!roomId) {
     return (
-      <DemoChatPage />
+      <MessagesLandingPage />
     )
   }
 
   return (
-    <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* 顶部导航 */}
-      <div style={{ height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+      <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
         <Link href="/plaza" style={{ display: 'flex' }}><ChevronLeft /></Link>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
           <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 16, fontWeight: 700 }}>{roomTitle}</span>
@@ -142,7 +142,7 @@ export default function ChatPage() {
       </div>
 
       {/* 消息区 */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 16px 0 16px', overflowY: 'auto' }}>
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 16px 0 16px', overflowY: 'auto' }}>
         {messages.length === 0 && (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>还没有消息，发送第一条吧！</span>
@@ -208,7 +208,7 @@ export default function ChatPage() {
       </div>
 
       {/* 输入栏 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px 24px 16px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px calc(10px + env(safe-area-inset-bottom)) 16px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
         <div style={{ flex: 1, height: 44, borderRadius: 22, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', padding: '0 16px' }}>
           <input
             value={input}
@@ -237,60 +237,77 @@ export default function ChatPage() {
   )
 }
 
-// 无 roomId 时展示的静态演示页面
-function DemoChatPage() {
+// 无 roomId 时展示的消息落地页（含 TabBar，Tab 4 消息高亮）
+const LayoutGrid2 = ({ size = 22, color = '#D1D5DB' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+  </svg>
+)
+const MapIconTab = ({ size = 22, color = '#D1D5DB' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" /><line x1="9" y1="3" x2="9" y2="18" /><line x1="15" y1="6" x2="15" y2="21" />
+  </svg>
+)
+const MessageCircleTab2 = ({ size = 22, color = '#D1D5DB' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+  </svg>
+)
+const MailActive = ({ size = 22, color = '#8B5CF6' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+  </svg>
+)
+const UserIconTab2 = ({ size = 22, color = '#D1D5DB' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+  </svg>
+)
+
+function MessagesLandingPage() {
   return (
-    <div style={{ width: 375, minHeight: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
-      <div style={{ height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
-        <Link href="/plaza" style={{ display: 'flex' }}><ChevronLeft /></Link>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-          <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 16, fontWeight: 700 }}>德州扑克局</span>
-          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>4 人参与</span>
-        </div>
-        <Ellipsis size={22} color="#1A1A1A" />
+    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+      {/* 顶部标题 */}
+      <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
+        <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 700 }}>消息</span>
       </div>
 
-      <div style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#8B5CF610', flexShrink: 0 }}>
-        <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#22C55E' }} />
-        <span style={{ color: '#8B5CF6', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500 }}>活动进行中 · 30分钟后开始</span>
+      {/* 空态内容区 */}
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: '0 40px' }}>
+        <div style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <MailActive size={32} color="#D1D5DB" />
+        </div>
+        <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 700 }}>暂无消息</span>
+        <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.6, textAlign: 'center' }}>
+          加入活动后，你可以在活动详情页进入对应的聊天室，与参与者实时交流
+        </span>
+        <Link href="/plaza" style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '12px 28px', textDecoration: 'none' }}>
+          <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700 }}>去广场看看</span>
+        </Link>
       </div>
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 16px 0 16px', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>你已加入活动群聊</span>
-        </div>
-        {[
-          { name: '小明同学', color: '#8B5CF6', text: '欢迎欢迎！大家到了直接来3楼，我已经订好位子了 🎉' },
-          { name: '运动达人Lisa', color: '#14B8A6', text: '太好了！我正在路上，大概还有10分钟' },
-        ].map((m, i) => (
-          <div key={i} style={{ display: 'flex', gap: 8 }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: m.color, flexShrink: 0 }} />
-            <div style={{ borderRadius: '4px 18px 18px 18px', backgroundColor: '#F4F4F5', padding: 12, display: 'flex', flexDirection: 'column', gap: 4, maxWidth: 240 }}>
-              <span style={{ color: m.color, fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600 }}>{m.name}</span>
-              <p style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.5, margin: 0 }}>{m.text}</p>
-            </div>
-          </div>
-        ))}
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <div style={{ borderRadius: '18px 4px 18px 18px', backgroundColor: '#8B5CF6', padding: 12, maxWidth: 160 }}>
-            <p style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.5, margin: 0 }}>好的，我马上出发！</p>
-          </div>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div style={{ borderRadius: 100, backgroundColor: '#14B8A620', padding: '10px 24px', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <MapPinSmall size={16} color="#14B8A6" />
-            <span style={{ color: '#14B8A6', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>我已到达</span>
-          </div>
-        </div>
-      </div>
-
-      <div style={{ height: 64, display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
-        <div style={{ flex: 1, height: 44, borderRadius: 22, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', padding: '0 16px' }}>
-          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>发送消息...</span>
-        </div>
-        <div style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#8B5CF6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Send size={20} color="#FFFFFF" />
-        </div>
+      {/* 底部 TabBar（消息 Tab 高亮） */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+        <Link href="/plaza" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+          <LayoutGrid2 size={22} color="#D1D5DB" />
+          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>广场</span>
+        </Link>
+        <Link href="/map" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+          <MapIconTab size={22} color="#D1D5DB" />
+          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>地图</span>
+        </Link>
+        <Link href="/ai" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+          <MessageCircleTab2 size={22} color="#D1D5DB" />
+          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>AI助手</span>
+        </Link>
+        <Link href="/chat" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+          <MailActive size={22} color="#8B5CF6" />
+          <span style={{ color: '#8B5CF6', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600 }}>消息</span>
+        </Link>
+        <Link href="/profile" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
+          <UserIconTab2 size={22} color="#D1D5DB" />
+          <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>我的</span>
+        </Link>
       </div>
     </div>
   )

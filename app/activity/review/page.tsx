@@ -34,9 +34,9 @@ const avatarColors = ['#8B5CF6', '#14B8A6', '#F472B6', '#F59E0B']
 
 export default function ActivityReviewPage() {
   return (
-    <div style={{ width: 375, height: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* 顶部导航 */}
-      <div style={{ height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+      <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
         <Link href="/activity" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 18, backgroundColor: '#F4F4F5', textDecoration: 'none' }}>
           <ChevronLeft />
         </Link>
@@ -45,7 +45,7 @@ export default function ActivityReviewPage() {
       </div>
 
       {/* 内容区域 */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 20px 20px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '8px 20px 20px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
 
         {/* 活动标题区 */}
         <div style={{ borderRadius: 20, background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -96,7 +96,7 @@ export default function ActivityReviewPage() {
       </div>
 
       {/* tabBar */}
-      <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px 28px 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+      <div style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
         {[
           { icon: <LayoutGrid />, label: '广场', href: '/plaza' },
           { icon: <MessageCircle />, label: 'AI助手', href: '/ai' },

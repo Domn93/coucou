@@ -1,26 +1,13 @@
-import Link from 'next/link'
+'use client'
+
+import { useRouter } from 'next/navigation'
 
 // 作者: Maqingze
-// 屏幕 15 — 通知中心
+// 屏幕 15 — 通知中心（二级页，从广场铃铛进入）
 
-const LayoutGrid = ({ size = 22, color = '#D1D5DB' }) => (
+const ChevronLeft = ({ size = 24, color = '#1A1A1A' }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-    <rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" />
-  </svg>
-)
-const MessageCircle = ({ size = 22, color = '#D1D5DB' }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-  </svg>
-)
-const Mail = ({ size = 22, color = '#D1D5DB' }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-    <rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-  </svg>
-)
-const BellIcon = ({ size = 22, color = '#8B5CF6' }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    <polyline points="15 18 9 12 15 6" />
   </svg>
 )
 
@@ -54,16 +41,20 @@ const notifications = [
 ]
 
 export default function NotificationsPage() {
+  const router = useRouter()
   return (
-    <div style={{ width: 375, height: 812, backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
-      {/* 顶部标题 */}
-      <div style={{ height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+      {/* 顶部标题（带返回按钮） */}
+      <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
+        <div onClick={() => router.back()} style={{ display: 'flex', cursor: 'pointer' }}>
+          <ChevronLeft size={24} color="#1A1A1A" />
+        </div>
         <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 20, fontWeight: 700 }}>通知</span>
         <span style={{ color: '#8B5CF6', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600 }}>全部已读</span>
       </div>
 
       {/* 通知列表 */}
-      <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8, padding: '8px 16px 16px 16px' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8, padding: '8px 16px 16px 16px' }}>
         {notifications.map((n, i) => (
           <div key={i} style={{
             borderRadius: 18, backgroundColor: n.highlight,
@@ -86,21 +77,6 @@ export default function NotificationsPage() {
               <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 11, marginTop: 2 }}>{n.time}</span>
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* tabBar */}
-      <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px 28px 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
-        {[
-          { icon: <LayoutGrid />, label: '广场', href: '/plaza' },
-          { icon: <MessageCircle />, label: 'AI助手', href: '/ai' },
-          { icon: <Mail />, label: '消息', href: '/chat' },
-          { icon: <BellIcon />, label: '通知', href: '/notifications', active: true },
-        ].map((tab, i) => (
-          <Link key={i} href={tab.href} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
-            {tab.icon}
-            <span style={{ color: tab.active ? '#8B5CF6' : '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: tab.active ? 600 : 500 }}>{tab.label}</span>
-          </Link>
         ))}
       </div>
     </div>
