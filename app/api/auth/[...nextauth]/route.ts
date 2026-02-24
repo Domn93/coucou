@@ -32,52 +32,62 @@ const handler = NextAuth({
 
         // 开发后门：000000 可绕过短信验证直接登录（SMS 服务未接入时使用）
         const isDevBypass = credentials.code === '000000' && !process.env.TENCENT_SECRET_ID
+        console.log(`[AUTH] phone=${credentials.phone} isDevBypass=${isDevBypass}`)
 
-        if (!isDevBypass) {
-          // 查询有效验证码
-          const record = await prisma.verificationCode.findFirst({
-            where: {
-              phone: credentials.phone,
-              code: credentials.code,
-              used: false,
-              expiresAt: { gte: new Date() },
-            },
-            orderBy: { createdAt: 'desc' },
+        try {
+          if (!isDevBypass) {
+            // 查询有效验证码
+            const record = await prisma.verificationCode.findFirst({
+              where: {
+                phone: credentials.phone,
+                code: credentials.code,
+                used: false,
+                expiresAt: { gte: new Date() },
+              },
+              orderBy: { createdAt: 'desc' },
+            })
+
+            if (!record) {
+              console.log('[AUTH] 验证码无效或已过期')
+              return null
+            }
+
+            // 标记验证码已使用
+            await prisma.verificationCode.update({
+              where: { id: record.id },
+              data: { used: true },
+            })
+          }
+
+          // 查找或创建用户
+          console.log('[AUTH] 开始查询用户...')
+          let user = await prisma.user.findUnique({
+            where: { phone: credentials.phone },
           })
 
-          if (!record) return null
+          const isNewUser = !user
+          if (!user) {
+            user = await prisma.user.create({
+              data: {
+                phone: credentials.phone,
+                name: `用户${credentials.phone.slice(-4)}`,
+                rating: 5.0,
+                eventCount: 0,
+              },
+            })
+          }
 
-          // 标记验证码已使用
-          await prisma.verificationCode.update({
-            where: { id: record.id },
-            data: { used: true },
-          })
-        }
-
-        // 查找或创建用户
-        let user = await prisma.user.findUnique({
-          where: { phone: credentials.phone },
-        })
-
-        const isNewUser = !user
-        if (!user) {
-          user = await prisma.user.create({
-            data: {
-              phone: credentials.phone,
-              name: `用户${credentials.phone.slice(-4)}`,
-              rating: 5.0,
-              eventCount: 0,
-            },
-          })
-        }
-
-        return {
-          id: user.id,
-          phone: user.phone,
-          name: user.name,
-          image: user.avatar,
-          // 传递是否新用户，用于引导流程
-          isNewUser,
+          console.log(`[AUTH] 登录成功 userId=${user.id} isNewUser=${isNewUser}`)
+          return {
+            id: user.id,
+            phone: user.phone,
+            name: user.name,
+            image: user.avatar,
+            isNewUser,
+          }
+        } catch (err) {
+          console.error('[AUTH] authorize 异常:', err)
+          return null
         }
       },
     }),
