@@ -34,7 +34,7 @@ export async function POST(
     }
 
     // 检查是否已加入
-    const alreadyJoined = activity.participants.some((p) => p.userId === userId)
+    const alreadyJoined = activity.participants.some((p: { userId: string }) => p.userId === userId)
     if (alreadyJoined) {
       return NextResponse.json({ error: '已加入该活动' }, { status: 400 })
     }
