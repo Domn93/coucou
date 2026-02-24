@@ -13,10 +13,7 @@ function createPrismaClient(): PrismaClient {
   if (!connectionString) {
     throw new Error('DATABASE_URL 环境变量未设置')
   }
-  // Vercel serverless 环境使用连接池模式，避免直连耗尽 Supabase 连接数
-  const poolUrl = connectionString.replace(':5432/', ':6543/').replace('postgres?', 'postgres?pgbouncer=true&')
-  const finalUrl = process.env.NODE_ENV === 'production' ? poolUrl : connectionString
-  const adapter = new PrismaPg({ connectionString: finalUrl })
+  const adapter = new PrismaPg({ connectionString })
   return new PrismaClient({ adapter })
 }
 
