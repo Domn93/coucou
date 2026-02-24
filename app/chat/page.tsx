@@ -3,7 +3,7 @@
 // 作者: Maqingze
 // 屏幕 5 — 临时聊天室（接入真实 API + Supabase Realtime 实时消息）
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
@@ -35,7 +35,7 @@ const avatarColors = ['#8B5CF6', '#14B8A6', '#F472B6', '#F59E0B', '#3B82F6', '#E
 // 演示用户
 const DEMO_USER = { id: 'demo-user-001', name: '演示用户', avatar: '' }
 
-export default function ChatPage() {
+function ChatContent() {
   const searchParams = useSearchParams()
   const roomId = searchParams.get('roomId')
 
@@ -234,6 +234,18 @@ export default function ChatPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>加载中...</span>
+      </div>
+    }>
+      <ChatContent />
+    </Suspense>
   )
 }
 

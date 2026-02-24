@@ -3,7 +3,7 @@
 // 作者: Maqingze
 // 屏幕 7 — 发起活动（受控表单，POST 到 /api/activities，集成高德POI搜索）
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
@@ -36,7 +36,7 @@ const maxParticipantOptions = [
 // 演示用固定发起人（待接入 NextAuth session 后替换）
 const DEMO_INITIATOR_ID = 'demo-user-001'
 
-export default function CreatePage() {
+function CreateContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { data: session } = useSession()
@@ -365,5 +365,17 @@ export default function CreatePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CreatePage() {
+  return (
+    <Suspense fallback={
+      <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>加载中...</span>
+      </div>
+    }>
+      <CreateContent />
+    </Suspense>
   )
 }

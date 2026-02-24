@@ -3,7 +3,7 @@
 // 作者: Maqingze
 // 屏幕 4 — 活动详情（接入真实 API，支持加入活动 + 倒计时）
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -90,6 +90,18 @@ interface ActivityDetail {
 }
 
 export default function ActivityPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+        <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>加载中...</span>
+      </div>
+    }>
+      <ActivityContent />
+    </Suspense>
+  )
+}
+
+function ActivityContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const activityId = searchParams.get('id')
