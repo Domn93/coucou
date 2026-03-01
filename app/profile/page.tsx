@@ -40,7 +40,7 @@ const menuItems = [
 
 export default function ProfilePage() {
   return (
-    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#F8F7FF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* header */}
       <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
         <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 700 }}>我的</span>
@@ -48,7 +48,7 @@ export default function ProfilePage() {
 
       {/* profileSection */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, padding: '20px 20px 24px 20px', flexShrink: 0 }}>
-        <div style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#8B5CF6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 80, height: 80, borderRadius: 40, background: 'linear-gradient(135deg, #6D28D9, #8B5CF6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 28, fontWeight: 700 }}>我</span>
         </div>
         <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 22, fontWeight: 700 }}>我</span>
@@ -62,7 +62,7 @@ export default function ProfilePage() {
           { value: '0', label: '参与活动', color: '#1A1A1A' },
           { value: '0', label: '发起活动', color: '#1A1A1A' },
         ].map((s, i) => (
-          <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, backgroundColor: '#F4F4F5', borderRadius: 16, padding: 16 }}>
+          <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, backgroundColor: i === 0 ? '#F5F3FF' : '#FFFFFF', border: `1px solid ${i === 0 ? '#DDD6FE' : '#EDE9FE'}`, borderRadius: 16, padding: 16 }}>
             <span style={{ color: s.color, fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 22, fontWeight: 700 }}>{s.value}</span>
             <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>{s.label}</span>
           </div>
@@ -71,7 +71,7 @@ export default function ProfilePage() {
 
       {/* menuSection */}
       <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '20px 20px 0 20px' }}>
-        <div style={{ backgroundColor: '#F4F4F5', borderRadius: 20, overflow: 'hidden' }}>
+        <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #EDE9FE', borderRadius: 20, overflow: 'hidden' }}>
           {menuItems.map((item, i) => (
             <div key={i}>
               {i > 0 && <div style={{ height: 1, backgroundColor: '#E5E7EB', width: '100%' }} />}
@@ -94,7 +94,7 @@ export default function ProfilePage() {
       </div>
 
       {/* tabBar */}
-      <div style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+      <div style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #EDE9FE', flexShrink: 0 }}>
         {[
           { icon: <LayoutGrid />, label: '广场', active: false, href: '/plaza' },
           { icon: <MapIcon />, label: '地图', active: false, href: '/map' },

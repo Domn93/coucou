@@ -184,13 +184,13 @@ function ActivityContent() {
   // 无 ID 或加载失败时显示静态演示内容
   if (!activity) {
     return (
-      <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, margin: '0 auto', padding: '0 32px' }}>
+      <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#F8F7FF', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, margin: '0 auto', padding: '0 32px' }}>
         <span style={{ fontSize: 40 }}>😵</span>
         <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, textAlign: 'center' }}>
           {error || '活动不存在，请从广场进入'}
         </span>
         <Link href="/plaza" style={{ textDecoration: 'none' }}>
-          <div style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '12px 24px' }}>
+          <div style={{ borderRadius: 100, background: 'linear-gradient(135deg, #6D28D9, #8B5CF6)', padding: '12px 24px' }}>
             <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700 }}>返回广场</span>
           </div>
         </Link>
@@ -204,7 +204,7 @@ function ActivityContent() {
   const timeStr = startDate.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 
   return (
-    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#F8F7FF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* 顶部导航 */}
       <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
         <Link href="/plaza" style={{ display: 'flex' }}><ChevronLeft /></Link>
@@ -240,7 +240,7 @@ function ActivityContent() {
         </div>
 
         {/* 发起人信息 */}
-        <div style={{ borderRadius: 16, backgroundColor: '#F4F4F5', padding: 14, display: 'flex', alignItems: 'center', gap: 12, width: '100%' }}>
+        <div style={{ borderRadius: 16, backgroundColor: '#FFFFFF', border: '1px solid #EDE9FE', padding: 14, display: 'flex', alignItems: 'center', gap: 12, width: '100%' }}>
           {activity.initiator.avatar ? (
             <img src={activity.initiator.avatar} alt={activity.initiator.name} style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
           ) : (
@@ -260,7 +260,7 @@ function ActivityContent() {
         </div>
 
         {/* 地点展示区 */}
-        <div style={{ borderRadius: 16, backgroundColor: '#E5E7EB', height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', gap: 8 }}>
+        <div style={{ borderRadius: 16, background: 'linear-gradient(135deg, #EDE9FE, #F5F3FF)', border: '1px solid #DDD6FE', height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', gap: 8 }}>
           <MapPinIcon size={22} color="#9CA3AF" />
           <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500 }}>
             {activity.location} · {activity.distance}
@@ -269,11 +269,11 @@ function ActivityContent() {
 
         {/* 时间 + 倒计时 */}
         <div style={{ display: 'flex', gap: 12, width: '100%' }}>
-          <div style={{ flex: 1, borderRadius: 16, backgroundColor: '#F4F4F5', padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div style={{ flex: 1, borderRadius: 16, backgroundColor: '#FFFFFF', border: '1px solid #EDE9FE', padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
             <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>开始时间</span>
             <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 700 }}>{timeStr}</span>
           </div>
-          <div style={{ flex: 1, borderRadius: 16, backgroundColor: '#F4F4F5', padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div style={{ flex: 1, borderRadius: 16, backgroundColor: '#FFFFFF', border: '1px solid #EDE9FE', padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
             <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 12 }}>倒计时</span>
             <span style={{ color: '#F472B6', fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 700 }}>{countdown || activity.timeDisplay}</span>
           </div>
@@ -300,7 +300,7 @@ function ActivityContent() {
               )
             ))}
             {activity.currentParticipants < activity.maxParticipants && (
-              <div style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#F4F4F5', border: '2px solid #D1D5DB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#F5F3FF', border: '2px solid #DDD6FE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Plus size={18} color="#9CA3AF" />
               </div>
             )}
@@ -316,7 +316,7 @@ function ActivityContent() {
       </div>
 
       {/* 底部操作栏 */}
-      <div style={{ minHeight: 100, display: 'flex', alignItems: 'center', padding: '16px 20px calc(16px + env(safe-area-inset-bottom)) 20px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+      <div style={{ minHeight: 100, display: 'flex', alignItems: 'center', padding: '16px 20px calc(16px + env(safe-area-inset-bottom)) 20px', backgroundColor: '#FFFFFF', borderTop: '1px solid #EDE9FE', flexShrink: 0 }}>
         {joined ? (
           <Link
             href={activity.chatRoomId ? `/chat?roomId=${activity.chatRoomId}` : '/chat'}
@@ -332,7 +332,7 @@ function ActivityContent() {
             onClick={handleJoin}
             style={{
               width: '100%', height: 52, borderRadius: 100,
-              backgroundColor: joining || activity.currentParticipants >= activity.maxParticipants ? '#C4B5FD' : '#8B5CF6',
+              background: joining || activity.currentParticipants >= activity.maxParticipants ? '#C4B5FD' : 'linear-gradient(135deg, #6D28D9, #8B5CF6)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               cursor: joining || activity.currentParticipants >= activity.maxParticipants ? 'not-allowed' : 'pointer',
             }}

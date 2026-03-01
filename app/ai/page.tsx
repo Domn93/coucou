@@ -114,7 +114,7 @@ export default function AIPage() {
   }
 
   return (
-    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#F8F7FF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* 顶部标题栏 */}
       <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
         <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 700 }}>AI 助手</span>
@@ -132,7 +132,7 @@ export default function AIPage() {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 280 }}>
                   {/* 消息气泡 */}
-                  <div style={{ borderRadius: '4px 18px 18px 18px', backgroundColor: '#F4F4F5', padding: 14 }}>
+                  <div style={{ borderRadius: '4px 18px 18px 18px', backgroundColor: '#EDE9FE', padding: 14 }}>
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
@@ -186,7 +186,7 @@ export default function AIPage() {
                       )}
                       <div
                         onClick={() => handleCreateActivity(msg.activity!)}
-                        style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                        style={{ borderRadius: 100, background: 'linear-gradient(135deg, #6D28D9, #8B5CF6)', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                       >
                         <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700 }}>跳转填写发布 →</span>
                       </div>
@@ -196,7 +196,7 @@ export default function AIPage() {
               </div>
             ) : (
               <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                <div style={{ borderRadius: '18px 4px 18px 18px', backgroundColor: '#8B5CF6', padding: 14, maxWidth: 240 }}>
+                <div style={{ borderRadius: '18px 4px 18px 18px', background: 'linear-gradient(135deg, #6D28D9, #8B5CF6)', padding: 14, maxWidth: 240 }}>
                   <p style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.5, margin: 0 }}>
                     {msg.content}
                   </p>
@@ -212,7 +212,7 @@ export default function AIPage() {
             <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: '#8B5CF6', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: 14 }}>✦</span>
             </div>
-            <div style={{ borderRadius: '4px 18px 18px 18px', backgroundColor: '#F4F4F5', padding: '14px 20px', display: 'flex', gap: 6, alignItems: 'center' }}>
+            <div style={{ borderRadius: '4px 18px 18px 18px', backgroundColor: '#EDE9FE', padding: '14px 20px', display: 'flex', gap: 6, alignItems: 'center' }}>
               {[0, 1, 2].map((j) => (
                 <div key={j} style={{
                   width: 7, height: 7, borderRadius: '50%', backgroundColor: '#9CA3AF',
@@ -231,7 +231,7 @@ export default function AIPage() {
               <div
                 key={i}
                 onClick={() => sendMessage(s)}
-                style={{ borderRadius: 100, border: '1.5px solid #E5E7EB', padding: '10px 16px', cursor: 'pointer', alignSelf: 'flex-start' }}
+                style={{ borderRadius: 100, border: '1.5px solid #DDD6FE', padding: '10px 16px', cursor: 'pointer', alignSelf: 'flex-start' }}
               >
                 <span style={{ color: '#6B7280', fontFamily: "'DM Sans', sans-serif", fontSize: 13 }}>{s}</span>
               </div>
@@ -243,8 +243,8 @@ export default function AIPage() {
       </div>
 
       {/* 输入栏 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px 12px 16px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
-        <div style={{ flex: 1, height: 44, borderRadius: 22, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', padding: '0 16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px 12px 16px', backgroundColor: '#FFFFFF', borderTop: '1px solid #EDE9FE', flexShrink: 0 }}>
+        <div style={{ flex: 1, height: 44, borderRadius: 22, backgroundColor: '#FFFFFF', border: '1.5px solid #EDE9FE', display: 'flex', alignItems: 'center', padding: '0 16px' }}>
           <input
             ref={inputRef}
             value={input}
@@ -261,7 +261,7 @@ export default function AIPage() {
           onClick={() => sendMessage()}
           style={{
             width: 44, height: 44, borderRadius: 22,
-            backgroundColor: input.trim() && !loading ? '#8B5CF6' : '#D1D5DB',
+            background: input.trim() && !loading ? 'linear-gradient(135deg, #6D28D9, #8B5CF6)' : '#D1D5DB',
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             cursor: input.trim() && !loading ? 'pointer' : 'not-allowed',
           }}
@@ -271,7 +271,7 @@ export default function AIPage() {
       </div>
 
       {/* 底部 TabBar（AI助手 Tab 高亮） */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #EDE9FE', flexShrink: 0 }}>
         <Link href="/plaza" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
           <LayoutGrid size={22} color="#D1D5DB" />
           <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500 }}>广场</span>

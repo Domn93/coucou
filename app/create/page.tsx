@@ -169,10 +169,10 @@ function CreateContent() {
   }
 
   return (
-    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#F8F7FF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       {/* 顶部导航 */}
       <div style={{ minHeight: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'max(8px, env(safe-area-inset-top)) 20px 0 20px', flexShrink: 0 }}>
-        <Link href="/plaza" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 18, backgroundColor: '#F4F4F5', textDecoration: 'none' }}>
+        <Link href="/plaza" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 18, backgroundColor: '#FFFFFF', border: '1px solid #EDE9FE', textDecoration: 'none' }}>
           <ChevronLeft />
         </Link>
         <span style={{ color: '#1A1A1A', fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 700 }}>发起活动</span>
@@ -192,8 +192,8 @@ function CreateContent() {
                 onClick={() => setCategory(t.value)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px',
-                  borderRadius: 100, backgroundColor: category === t.value ? t.bg : '#F4F4F5',
-                  border: category === t.value ? `1.5px solid ${t.color}` : '1.5px solid transparent',
+                  borderRadius: 100, backgroundColor: category === t.value ? t.bg : '#FFFFFF',
+                  border: category === t.value ? `1.5px solid ${t.color}` : '1.5px solid #EDE9FE',
                   cursor: 'pointer',
                 }}
               >
@@ -212,8 +212,8 @@ function CreateContent() {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="给活动起个名字..."
             style={{
-              borderRadius: 14, backgroundColor: '#F4F4F5', padding: '14px 16px',
-              border: 'none', outline: 'none', fontSize: 15, fontFamily: "'DM Sans', sans-serif",
+              borderRadius: 14, backgroundColor: '#FFFFFF', border: '1.5px solid #EDE9FE', padding: '14px 16px',
+              outline: 'none', fontSize: 15, fontFamily: "'DM Sans', sans-serif",
               color: '#1A1A1A', width: '100%', boxSizing: 'border-box',
             }}
           />
@@ -230,8 +230,8 @@ function CreateContent() {
                 onChange={(e) => setDate(e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
                 style={{
-                  width: '100%', borderRadius: 14, backgroundColor: '#F4F4F5', padding: '14px 16px',
-                  border: 'none', outline: 'none', fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+                  width: '100%', borderRadius: 14, backgroundColor: '#FFFFFF', border: '1.5px solid #EDE9FE', padding: '14px 16px',
+                  outline: 'none', fontSize: 14, fontFamily: "'DM Sans', sans-serif",
                   color: date ? '#1A1A1A' : '#9CA3AF', boxSizing: 'border-box',
                 }}
               />
@@ -242,8 +242,8 @@ function CreateContent() {
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
                 style={{
-                  width: '100%', borderRadius: 14, backgroundColor: '#F4F4F5', padding: '14px 16px',
-                  border: 'none', outline: 'none', fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+                  width: '100%', borderRadius: 14, backgroundColor: '#FFFFFF', border: '1.5px solid #EDE9FE', padding: '14px 16px',
+                  outline: 'none', fontSize: 14, fontFamily: "'DM Sans', sans-serif",
                   color: time ? '#1A1A1A' : '#9CA3AF', boxSizing: 'border-box',
                 }}
               />
@@ -255,7 +255,7 @@ function CreateContent() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>活动地点</span>
           <div style={{ position: 'relative' }}>
-            <div style={{ borderRadius: 14, backgroundColor: '#F4F4F5', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ borderRadius: 14, backgroundColor: '#FFFFFF', border: '1.5px solid #EDE9FE', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 14 }}>📍</span>
               <input
                 value={location}
@@ -317,7 +317,8 @@ function CreateContent() {
                 onClick={() => setMaxParticipants(opt.value)}
                 style={{
                   flex: 1, padding: '10px 0', borderRadius: 100,
-                  backgroundColor: maxParticipants === opt.value ? '#8B5CF6' : '#F4F4F5',
+                  background: maxParticipants === opt.value ? 'linear-gradient(135deg, #6D28D9, #8B5CF6)' : '#FFFFFF',
+                  border: maxParticipants === opt.value ? 'none' : '1px solid #EDE9FE',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
                 }}
               >
@@ -336,8 +337,8 @@ function CreateContent() {
             placeholder="介绍一下这个活动，吸引更多人参加..."
             rows={4}
             style={{
-              borderRadius: 14, backgroundColor: '#F4F4F5', padding: '14px 16px',
-              border: 'none', outline: 'none', fontSize: 15, fontFamily: "'DM Sans', sans-serif",
+              borderRadius: 14, backgroundColor: '#FFFFFF', border: '1.5px solid #EDE9FE', padding: '14px 16px',
+              outline: 'none', fontSize: 15, fontFamily: "'DM Sans', sans-serif",
               color: '#1A1A1A', width: '100%', boxSizing: 'border-box', resize: 'none',
             }}
           />
@@ -354,7 +355,7 @@ function CreateContent() {
         <div
           onClick={!submitting ? handleSubmit : undefined}
           style={{
-            borderRadius: 100, backgroundColor: submitting ? '#C4B5FD' : '#8B5CF6',
+            borderRadius: 100, background: submitting ? '#C4B5FD' : 'linear-gradient(135deg, #6D28D9, #8B5CF6)',
             padding: '16px 0', display: 'flex', alignItems: 'center', justifyContent: 'center',
             marginTop: 8, cursor: submitting ? 'not-allowed' : 'pointer',
           }}
@@ -371,7 +372,7 @@ function CreateContent() {
 export default function CreatePage() {
   return (
     <Suspense fallback={
-      <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ width: '100%', minHeight: '100dvh', backgroundColor: '#F8F7FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>加载中...</span>
       </div>
     }>

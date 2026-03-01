@@ -72,7 +72,7 @@ const categoryColors: Record<string, { color: string; bg: string }> = {
 // 骨架屏卡片占位
 function SkeletonCard() {
   return (
-    <div style={{ borderRadius: 20, backgroundColor: '#F4F4F5', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ borderRadius: 20, backgroundColor: '#FFFFFF', border: '1px solid #EDE9FE', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: '#E5E7EB' }} />
@@ -102,13 +102,13 @@ function TopBar({ onSearchClick, locationName }: { onSearchClick: () => void; lo
           <MapPin size={16} color="#8B5CF6" />
           <span style={{ color: '#1A1A1A', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>{locationName}</span>
         </div>
-        <Link href="/notifications" style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+        <Link href="/notifications" style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#FFFFFF', border: '1px solid #EDE9FE', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
           <Bell size={18} color="#1A1A1A" />
         </Link>
       </div>
       <div
         onClick={onSearchClick}
-        style={{ height: 48, borderRadius: 24, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px', margin: '0 16px', flexShrink: 0, cursor: 'pointer' }}
+        style={{ height: 46, borderRadius: 24, backgroundColor: '#FFFFFF', border: '1.5px solid #EDE9FE', display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px', margin: '0 16px', flexShrink: 0, cursor: 'pointer' }}
       >
         <Search size={18} color="#9CA3AF" />
         <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>附近有什么好玩的...</span>
@@ -120,7 +120,7 @@ function TopBar({ onSearchClick, locationName }: { onSearchClick: () => void; lo
 // 底部导航栏
 function TabBar() {
   return (
-    <div style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #F4F4F5', flexShrink: 0 }}>
+    <div style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '12px 24px calc(12px + env(safe-area-inset-bottom)) 24px', backgroundColor: '#FFFFFF', borderTop: '1px solid #EDE9FE', flexShrink: 0 }}>
       <Link href="/plaza" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textDecoration: 'none' }}>
         <LayoutGrid size={22} color="#8B5CF6" />
         <span style={{ color: '#8B5CF6', fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600 }}>广场</span>
@@ -153,7 +153,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
 
   return (
     <Link href={`/activity?id=${activity.id}`} style={{ textDecoration: 'none' }}>
-      <div style={{ borderRadius: 20, backgroundColor: '#F4F4F5', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ borderRadius: 20, backgroundColor: '#FFFFFF', border: '1px solid #EDE9FE', padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
         {/* 头像 + 昵称 + 类别标签 */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -196,7 +196,7 @@ function ActivityCard({ activity }: { activity: Activity }) {
             {activity.currentParticipants}/{activity.maxParticipants} 人已加入
             {activity.urgency && <span style={{ color: '#F472B6', marginLeft: 6 }}>· {activity.urgency}</span>}
           </span>
-          <div style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '8px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ borderRadius: 100, background: 'linear-gradient(135deg, #6D28D9, #8B5CF6)', padding: '8px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700 }}>凑一个</span>
           </div>
         </div>
@@ -262,7 +262,7 @@ export default function PlazaPage() {
   }
 
   return (
-    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#FFFFFF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
+    <div style={{ width: '100%', height: '100dvh', backgroundColor: '#F8F7FF', display: 'flex', flexDirection: 'column', margin: '0 auto', overflow: 'hidden' }}>
       <TopBar onSearchClick={handleSearchClick} locationName={locationName} />
 
       {/* 加载骨架屏 */}
@@ -279,7 +279,7 @@ export default function PlazaPage() {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '0 32px' }}>
           <span style={{ fontSize: 40 }}>😵</span>
           <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, textAlign: 'center' }}>{error}</span>
-          <div onClick={() => fetchActivities(userLat, userLng)} style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '12px 24px', cursor: 'pointer' }}>
+          <div onClick={() => fetchActivities(userLat, userLng)} style={{ borderRadius: 100, background: 'linear-gradient(135deg, #6D28D9, #8B5CF6)', padding: '12px 24px', cursor: 'pointer' }}>
             <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700 }}>重新加载</span>
           </div>
         </div>
@@ -288,7 +288,7 @@ export default function PlazaPage() {
       {/* 空态 */}
       {!loading && !error && activities.length === 0 && (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 32px', gap: 16 }}>
-          <div style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: '#F4F4F5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontSize: 52 }}>🏙</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
@@ -296,7 +296,7 @@ export default function PlazaPage() {
             <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, textAlign: 'center' }}>成为第一个发起活动的人，让有趣的事情发生！</span>
           </div>
           <Link href="/create" style={{ textDecoration: 'none', width: '100%' }}>
-            <div style={{ borderRadius: 100, backgroundColor: '#8B5CF6', padding: '16px 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ borderRadius: 100, background: 'linear-gradient(135deg, #6D28D9, #8B5CF6)', padding: '16px 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ color: '#FFFFFF', fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700 }}>✦ 发起第一个活动</span>
             </div>
           </Link>
@@ -311,7 +311,7 @@ export default function PlazaPage() {
           ))}
           {/* 底部发起活动入口 */}
           <Link href="/create" style={{ textDecoration: 'none', marginBottom: 16 }}>
-            <div style={{ borderRadius: 20, border: '1.5px dashed #E5E7EB', padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <div style={{ borderRadius: 20, border: '1.5px dashed #DDD6FE', padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
               <span style={{ fontSize: 18 }}>✦</span>
               <span style={{ color: '#9CA3AF', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>发起新活动</span>
             </div>

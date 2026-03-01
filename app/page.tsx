@@ -6,7 +6,7 @@ export default function Home() {
       style={{
         width: '100%',
         minHeight: '100dvh',
-        background: 'linear-gradient(180deg, #7C3AED 0%, #8B5CF6 40%, #A78BFA 70%, #C4B5FD 100%)',
+        background: 'linear-gradient(170deg, #3B0764 0%, #6D28D9 45%, #8B5CF6 75%, #A78BFA 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -55,8 +55,8 @@ export default function Home() {
           style={{
             color: '#FFFFFF',
             fontFamily: "'Bricolage Grotesque', sans-serif",
-            fontSize: 36,
-            fontWeight: 700,
+            fontSize: 38,
+            fontWeight: 800,
             margin: 0,
           }}
         >
@@ -106,9 +106,9 @@ export default function Home() {
           href="/login"
           style={{
             width: '100%',
-            height: 56,
+            height: 58,
             borderRadius: 100,
-            backgroundColor: '#FFFFFF',
+            background: 'linear-gradient(135deg, #FFFFFF, #F0EAFF)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
